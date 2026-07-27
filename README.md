@@ -1,9 +1,12 @@
-# Uma XV
+# Uma XV — versión mejorada
 
-Invitación digital interactiva para el cumpleaños de 15 de Uma.
+Archivos:
+- `index.html`
+- `styles.css`
+- `app.js`
+- `assets/disco-ball.svg`
 
-## Publicación
-
-Este proyecto está preparado para funcionar con GitHub Pages.
-
-Archivo principal: `index.html`
+Para actualizar GitHub:
+1. Subir estos archivos reemplazando los anteriores.
+2. Mantener la misma estructura de carpetas.
+3. GitHub Pages actualizará el mismo enlace.

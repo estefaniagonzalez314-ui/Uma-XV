@@ -9,9 +9,11 @@ const modal = document.getElementById("giftModal");
 const closeModalButton = document.getElementById("closeModal");
 const modalContent = document.getElementById("modalContent");
 const toast = document.getElementById("toast");
+const transitionVeil = document.getElementById("transitionVeil");
 
 let player = null;
 let musicPlaying = false;
+let playerReady = false;
 
 function updateCountdown() {
   const distance = Math.max(0, EVENT_DATE - Date.now());
@@ -50,7 +52,15 @@ window.onYouTubeIframeAPIReady = function () {
       controls: 0,
       playsinline: 1,
       rel: 0,
-      modestbranding: 1
+      modestbranding: 1,
+      preload: "auto"
+    },
+    events: {
+      onReady: event => {
+        playerReady = true;
+        event.target.mute();
+        event.target.cueVideoById(VIDEO_ID);
+      }
     }
   });
 };
@@ -59,21 +69,33 @@ const youtubeScript = document.createElement("script");
 youtubeScript.src = "https://www.youtube.com/iframe_api";
 document.head.appendChild(youtubeScript);
 
-enterButton.addEventListener("click", () => {
-  launchSparkles();
-  invitation.scrollIntoView({ behavior: "smooth" });
+enterButton.addEventListener("click", async event => {
+  launchSparkles(event.clientX || innerWidth / 2, event.clientY || innerHeight / 2, 220);
+  transitionVeil.classList.add("active");
 
   musicToggle.style.display = "grid";
 
-  if (player && player.playVideo) {
+  if (playerReady && player && player.playVideo) {
+    player.unMute();
+    player.seekTo(0, true);
     player.playVideo();
     musicPlaying = true;
     musicToggle.textContent = "❚❚";
   }
+
+  setTimeout(() => {
+    invitation.scrollIntoView({ behavior: "smooth" });
+  }, 350);
+
+  setTimeout(() => {
+    transitionVeil.classList.remove("active");
+  }, 950);
 });
 
-musicToggle.addEventListener("click", () => {
-  if (!player) return;
+musicToggle.addEventListener("click", event => {
+  launchSparkles(event.clientX, event.clientY, 55);
+
+  if (!playerReady || !player) return;
 
   if (musicPlaying) {
     player.pauseVideo();
@@ -86,6 +108,12 @@ musicToggle.addEventListener("click", () => {
   musicPlaying = !musicPlaying;
 });
 
+document.querySelectorAll(".sparkle-trigger").forEach(element => {
+  element.addEventListener("pointerdown", event => {
+    launchSparkles(event.clientX, event.clientY, 48);
+  });
+});
+
 document.querySelectorAll("[data-gift]").forEach(button => {
   button.addEventListener("click", () => openGiftModal(button.dataset.gift));
 });
@@ -96,12 +124,16 @@ function openGiftModal(type) {
       <p class="eyebrow">Transferencia</p>
       <h2 style="font-size:2.4rem">Mi alias</h2>
       <div class="alias">umasilva.mp</div>
-      <button id="copyAliasButton" class="glass-button">Copiar alias</button>
+      <button id="copyAliasButton" class="glass-button sparkle-trigger">Copiar alias</button>
     `;
 
-    setTimeout(() => {
-      document.getElementById("copyAliasButton").addEventListener("click", copyAlias);
-    }, 0);
+    requestAnimationFrame(() => {
+      const copyButton = document.getElementById("copyAliasButton");
+      copyButton.addEventListener("pointerdown", event => {
+        launchSparkles(event.clientX, event.clientY, 55);
+      });
+      copyButton.addEventListener("click", copyAlias);
+    });
   }
 
   if (type === "sobre") {
@@ -124,13 +156,17 @@ function openGiftModal(type) {
     `;
   }
 
-  modal.classList.add("show");
+  modal.style.display = "grid";
+  requestAnimationFrame(() => modal.classList.add("show"));
   modal.setAttribute("aria-hidden", "false");
 }
 
 function closeGiftModal() {
   modal.classList.remove("show");
   modal.setAttribute("aria-hidden", "true");
+  setTimeout(() => {
+    modal.style.display = "none";
+  }, 420);
 }
 
 closeModalButton.addEventListener("click", closeGiftModal);
@@ -158,41 +194,24 @@ function showToast(message) {
   setTimeout(() => toast.classList.remove("show"), 1800);
 }
 
-document.getElementById("calendarButton").addEventListener("click", () => {
-  const calendarText = `BEGIN:VCALENDAR
-VERSION:2.0
-BEGIN:VEVENT
-DTSTART:20261025T000000Z
-DTEND:20261025T080000Z
-SUMMARY:Uma XV
-LOCATION:Stihmpra, Neuquén
-DESCRIPTION:Fiesta de 15 de Uma
-END:VEVENT
-END:VCALENDAR`;
-
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(new Blob([calendarText], { type: "text/calendar" }));
-  link.download = "Uma-XV.ics";
-  link.click();
-});
-
-function launchSparkles() {
+function launchSparkles(originX, originY, amount = 70) {
   const canvas = document.getElementById("sparkCanvas");
   const context = canvas.getContext("2d");
   const ratio = window.devicePixelRatio || 1;
 
   canvas.width = window.innerWidth * ratio;
   canvas.height = window.innerHeight * ratio;
-  context.scale(ratio, ratio);
+  context.setTransform(ratio, 0, 0, ratio, 0, 0);
 
-  const particles = Array.from({ length: 190 }, () => ({
-    x: window.innerWidth / 2,
-    y: window.innerHeight * 0.55,
+  const particles = Array.from({ length: amount }, () => ({
+    x: originX,
+    y: originY,
     angle: Math.random() * Math.PI * 2,
-    speed: 2.2 + Math.random() * 7.5,
-    radius: 1 + Math.random() * 3.2,
-    life: 75 + Math.random() * 55,
-    gravity: 0.6 + Math.random() * 0.5
+    speed: 1.4 + Math.random() * 6.8,
+    radius: .8 + Math.random() * 2.8,
+    life: 48 + Math.random() * 52,
+    gravity: .18 + Math.random() * .45,
+    twinkle: Math.random() * Math.PI * 2
   }));
 
   function draw() {
@@ -201,12 +220,13 @@ function launchSparkles() {
     particles.forEach(particle => {
       particle.x += Math.cos(particle.angle) * particle.speed;
       particle.y += Math.sin(particle.angle) * particle.speed + particle.gravity;
-      particle.speed *= 0.984;
+      particle.speed *= .982;
       particle.life -= 1;
+      particle.twinkle += .18;
 
-      context.globalAlpha = Math.max(0, particle.life / 105);
+      context.globalAlpha = Math.max(0, particle.life / 90) * (.65 + Math.sin(particle.twinkle) * .35);
       context.fillStyle = "#ffffff";
-      context.shadowBlur = 12;
+      context.shadowBlur = 14;
       context.shadowColor = "#ffffff";
       context.beginPath();
       context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);

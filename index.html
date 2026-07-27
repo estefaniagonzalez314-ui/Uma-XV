@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Uma XV</title>
+  <meta name="theme-color" content="#050505">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <canvas id="sparkCanvas"></canvas>
+
+  <button id="musicToggle" class="music-toggle" aria-label="Pausar o reanudar música">❚❚</button>
+  <div id="youtubePlayer" class="youtube-player" aria-hidden="true"></div>
+
+  <header class="hero">
+    <div class="hero-glow"></div>
+
+    <div class="hero-content">
+      <div class="disco-ball" aria-hidden="true">
+        <span class="disco-shine"></span>
+      </div>
+
+      <p class="eyebrow">Mis quince años</p>
+      <h1>Uma <span>XV</span></h1>
+      <p class="hero-date">24 · 10 · 2026</p>
+
+      <button id="enterButton" class="glass-button">Entrar</button>
+    </div>
+
+    <p class="scroll-hint">Deslizá para descubrir</p>
+  </header>
+
+  <main id="invitation">
+    <section class="section reveal intro-section">
+      <p class="eyebrow">Una noche especial</p>
+      <h2>Te invito a celebrar conmigo</h2>
+      <p class="lead">
+        Hay momentos que se sueñan toda la vida.
+        Quiero compartir el mío con las personas que más quiero.
+      </p>
+    </section>
+
+    <section class="section reveal">
+      <p class="eyebrow">Cuenta regresiva</p>
+      <h2>Falta muy poquito</h2>
+
+      <div class="countdown">
+        <div class="count-card"><strong id="days">00</strong><span>Días</span></div>
+        <div class="count-card"><strong id="hours">00</strong><span>Horas</span></div>
+        <div class="count-card"><strong id="minutes">00</strong><span>Minutos</span></div>
+        <div class="count-card"><strong id="seconds">00</strong><span>Segundos</span></div>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="info-grid">
+        <article class="glass-card">
+          <p class="eyebrow">Cuándo</p>
+          <h3>Sábado 24 de octubre</h3>
+          <p>21:00 a 05:00 hs</p>
+          <button class="glass-button small-button" id="calendarButton">Agendar fecha</button>
+        </article>
+
+        <article class="glass-card">
+          <p class="eyebrow">Dónde</p>
+          <h3>Stihmpra</h3>
+          <p>Neuquén</p>
+          <a
+            class="glass-button small-button"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://www.google.com/maps/place/Stihmpra/@-38.9565964,-67.9270484,285m/data=!3m1!1e3!4m6!3m5!1s0x960a3ac097acdc07:0x99a7cc87a7b4589a!8m2!3d-38.9562458!4d-67.9275894!16s%2Fg%2F11cspqgqd1?entry=ttu"
+          >Cómo llegar</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <article class="glass-card dress-card">
+        <p class="eyebrow">Dress code</p>
+        <h3>Elegante</h3>
+        <p>Reservá el plateado para la quinceañera.</p>
+      </article>
+    </section>
+
+    <section class="section reveal gift-section">
+      <p class="eyebrow">Regalos</p>
+      <h2>Tu presencia es lo más importante</h2>
+      <p class="lead">
+        Pero si querés hacerme un regalo, podés elegir la opción que te resulte más cómoda.
+      </p>
+
+      <div class="gift-grid">
+        <button class="glass-card gift-card" data-gift="transferencia">
+          <span class="gift-icon">💳</span>
+          <strong>Transferencia</strong>
+          <small>Ver y copiar alias</small>
+        </button>
+
+        <button class="glass-card gift-card" data-gift="sobre">
+          <span class="gift-icon">✉️</span>
+          <strong>Sobre</strong>
+          <small>Información para la fiesta</small>
+        </button>
+
+        <button class="glass-card gift-card" data-gift="regalo">
+          <span class="gift-icon">🎁</span>
+          <strong>Regalo tradicional</strong>
+          <small>Cualquier detalle será bienvenido</small>
+        </button>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <p class="eyebrow">Confirmación</p>
+      <h2>¿Venís?</h2>
+      <p class="lead">Confirmá tu asistencia directamente por WhatsApp.</p>
+
+      <a
+        class="glass-button confirm-button"
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://wa.me/5492995530444?text=Hola%20Uma%20%F0%9F%98%8A%20Confirmo%20mi%20asistencia%20a%20tus%20XV.%20%C2%A1Nos%20vemos%20el%2024%20de%20octubre!"
+      >Confirmar asistencia</a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="mini-disco" aria-hidden="true"></div>
+    <p class="footer-name">Uma XV</p>
+    <p>Los espero para compartir una noche inolvidable.</p>
+    <p class="eyebrow">24 de octubre de 2026</p>
+  </footer>
+
+  <div id="giftModal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <button id="closeModal" class="close-button" aria-label="Cerrar">×</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">Alias copiado</div>
+
+  <script src="app.js"></script>
+</body>
+</html>

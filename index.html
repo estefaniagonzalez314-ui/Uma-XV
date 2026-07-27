@@ -6,39 +6,92 @@
   <title>Uma XV</title>
   <meta name="theme-color" content="#050505">
   <link rel="preconnect" href="https://www.youtube.com">
-  <link rel="preconnect" href="https://www.google.com">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="locked">
   <canvas id="sparkCanvas"></canvas>
-  <div id="transitionVeil" class="transition-veil"></div>
 
-  <button id="musicToggle" class="music-toggle sparkle-trigger" aria-label="Pausar o reanudar música">❚❚</button>
   <div id="youtubePlayer" class="youtube-player" aria-hidden="true"></div>
+  <button id="musicToggle" class="music-toggle sparkle-trigger" aria-label="Pausar o reanudar música">❚❚</button>
 
-  <header class="hero">
-    <div class="hero-light hero-light-one"></div>
-    <div class="hero-light hero-light-two"></div>
+  <section id="welcome" class="welcome-screen" aria-label="Portada de la invitación">
+    <div class="welcome-glow glow-a"></div>
+    <div class="welcome-glow glow-b"></div>
 
-    <div class="hero-content">
+    <div class="welcome-content">
       <div class="disco-wrap" aria-hidden="true">
-        <img src="assets/disco-ball.svg" alt="" class="disco-image">
-        <div class="light-rays"></div>
+        <svg class="disco-svg" viewBox="0 0 520 560" role="img" aria-label="Bola de espejos">
+          <defs>
+            <radialGradient id="sphere" cx="34%" cy="28%" r="74%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="16%" stop-color="#eeeeee"/>
+              <stop offset="46%" stop-color="#a9a9a9"/>
+              <stop offset="74%" stop-color="#454545"/>
+              <stop offset="100%" stop-color="#111111"/>
+            </radialGradient>
+
+            <linearGradient id="tileGradient" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity=".96"/>
+              <stop offset="45%" stop-color="#bbbbbb" stop-opacity=".88"/>
+              <stop offset="100%" stop-color="#333333" stop-opacity=".92"/>
+            </linearGradient>
+
+            <linearGradient id="hangerGradient" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#fafafa"/>
+              <stop offset="55%" stop-color="#888888"/>
+              <stop offset="100%" stop-color="#2a2a2a"/>
+            </linearGradient>
+
+            <pattern id="mirrorTiles" width="34" height="34" patternUnits="userSpaceOnUse">
+              <rect x="2" y="2" width="29" height="29" rx="2" fill="url(#tileGradient)"
+                    stroke="#ffffff" stroke-opacity=".32" stroke-width="1"/>
+            </pattern>
+
+            <clipPath id="sphereClip">
+              <circle cx="260" cy="322" r="188"/>
+            </clipPath>
+
+            <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="15"/>
+            </filter>
+          </defs>
+
+          <line x1="260" y1="0" x2="260" y2="103" stroke="#d7d7d7" stroke-width="5"/>
+          <rect x="224" y="88" width="72" height="54" rx="15"
+                fill="url(#hangerGradient)" stroke="#f2f2f2" stroke-width="4"/>
+
+          <circle cx="260" cy="322" r="207" fill="#ffffff" opacity=".18" filter="url(#softGlow)"/>
+          <circle cx="260" cy="322" r="188" fill="url(#sphere)"/>
+
+          <g clip-path="url(#sphereClip)">
+            <rect x="55" y="118" width="410" height="410" fill="url(#mirrorTiles)"
+                  transform="rotate(-5 260 322)"/>
+            <ellipse cx="194" cy="228" rx="108" ry="68" fill="#ffffff" opacity=".24"/>
+            <ellipse cx="346" cy="397" rx="128" ry="93" fill="#000000" opacity=".22"/>
+            <path d="M78 310 Q260 210 442 310" fill="none" stroke="#ffffff" stroke-opacity=".18" stroke-width="8"/>
+            <path d="M94 382 Q260 292 426 382" fill="none" stroke="#000000" stroke-opacity=".18" stroke-width="10"/>
+          </g>
+
+          <circle cx="260" cy="322" r="188" fill="none" stroke="#ffffff" stroke-opacity=".42" stroke-width="4"/>
+          <circle cx="185" cy="218" r="20" fill="#ffffff" opacity=".85"/>
+          <circle cx="350" cy="276" r="11" fill="#ffffff" opacity=".62"/>
+          <circle cx="142" cy="365" r="8" fill="#ffffff" opacity=".48"/>
+        </svg>
+
+        <div class="ray-wheel"></div>
       </div>
 
       <p class="eyebrow">Mis quince años</p>
       <h1>Uma <span>XV</span></h1>
-      <p class="hero-date">24 · 10 · 2026</p>
+      <p class="welcome-date">24 · 10 · 2026</p>
 
       <button id="enterButton" class="glass-button primary-button sparkle-trigger">
-        <span>Entrar</span>
+        Entrar
       </button>
     </div>
+  </section>
 
-    <p class="scroll-hint">Deslizá para descubrir</p>
-  </header>
-
-  <main id="invitation">
+  <main id="invitation" aria-hidden="true">
     <section class="section reveal intro-section">
       <p class="eyebrow">Una noche especial</p>
       <h2>Te invito a celebrar conmigo</h2>
@@ -67,7 +120,6 @@
           <h3>Sábado 24 de octubre</h3>
           <p>21:00 a 05:00 hs</p>
           <a
-            id="calendarButton"
             class="glass-button small-button sparkle-trigger"
             target="_blank"
             rel="noopener noreferrer"
@@ -137,14 +189,24 @@
         href="https://wa.me/5492995530444?text=Hola%20Uma%20%F0%9F%98%8A%20Confirmo%20mi%20asistencia%20a%20tus%20XV.%20%C2%A1Nos%20vemos%20el%2024%20de%20octubre!"
       >Confirmar asistencia</a>
     </section>
-  </main>
 
-  <footer>
-    <img src="assets/disco-ball.svg" alt="" class="footer-disco">
-    <p class="footer-name">Uma XV</p>
-    <p>Los espero para compartir una noche inolvidable.</p>
-    <p class="eyebrow">24 de octubre de 2026</p>
-  </footer>
+    <footer>
+      <div class="footer-ball">
+        <svg viewBox="0 0 520 560" aria-hidden="true">
+          <use href="#"></use>
+          <circle cx="260" cy="322" r="188" fill="url(#sphere)"/>
+          <g clip-path="url(#sphereClip)">
+            <rect x="55" y="118" width="410" height="410" fill="url(#mirrorTiles)"
+                  transform="rotate(-5 260 322)"/>
+          </g>
+          <circle cx="260" cy="322" r="188" fill="none" stroke="#ffffff" stroke-opacity=".4" stroke-width="4"/>
+        </svg>
+      </div>
+      <p class="footer-name">Uma XV</p>
+      <p>Los espero para compartir una noche inolvidable.</p>
+      <p class="eyebrow">24 de octubre de 2026</p>
+    </footer>
+  </main>
 
   <div id="giftModal" class="modal" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true">

@@ -2,18 +2,19 @@
 const EVENT_DATE = new Date("2026-10-24T21:00:00-03:00").getTime();
 const VIDEO_ID = "UxxajLWwzqY";
 
-const enterButton = document.getElementById("enterButton");
+const body = document.body;
+const welcome = document.getElementById("welcome");
 const invitation = document.getElementById("invitation");
+const enterButton = document.getElementById("enterButton");
 const musicToggle = document.getElementById("musicToggle");
 const modal = document.getElementById("giftModal");
 const closeModalButton = document.getElementById("closeModal");
 const modalContent = document.getElementById("modalContent");
 const toast = document.getElementById("toast");
-const transitionVeil = document.getElementById("transitionVeil");
 
 let player = null;
-let musicPlaying = false;
 let playerReady = false;
+let musicPlaying = false;
 
 function updateCountdown() {
   const distance = Math.max(0, EVENT_DATE - Date.now());
@@ -52,8 +53,7 @@ window.onYouTubeIframeAPIReady = function () {
       controls: 0,
       playsinline: 1,
       rel: 0,
-      modestbranding: 1,
-      preload: "auto"
+      modestbranding: 1
     },
     events: {
       onReady: event => {
@@ -69,13 +69,10 @@ const youtubeScript = document.createElement("script");
 youtubeScript.src = "https://www.youtube.com/iframe_api";
 document.head.appendChild(youtubeScript);
 
-enterButton.addEventListener("click", async event => {
-  launchSparkles(event.clientX || innerWidth / 2, event.clientY || innerHeight / 2, 220);
-  transitionVeil.classList.add("active");
+enterButton.addEventListener("click", event => {
+  launchSparkles(event.clientX || innerWidth / 2, event.clientY || innerHeight / 2, 240);
 
-  musicToggle.style.display = "grid";
-
-  if (playerReady && player && player.playVideo) {
+  if (playerReady && player) {
     player.unMute();
     player.seekTo(0, true);
     player.playVideo();
@@ -83,13 +80,17 @@ enterButton.addEventListener("click", async event => {
     musicToggle.textContent = "❚❚";
   }
 
-  setTimeout(() => {
-    invitation.scrollIntoView({ behavior: "smooth" });
-  }, 350);
+  musicToggle.style.display = "grid";
+  welcome.classList.add("exiting");
 
   setTimeout(() => {
-    transitionVeil.classList.remove("active");
-  }, 950);
+    welcome.style.display = "none";
+    body.classList.remove("locked");
+    document.documentElement.classList.remove("locked");
+    invitation.setAttribute("aria-hidden", "false");
+    invitation.classList.add("ready");
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, 1100);
 });
 
 musicToggle.addEventListener("click", event => {
@@ -164,6 +165,7 @@ function openGiftModal(type) {
 function closeGiftModal() {
   modal.classList.remove("show");
   modal.setAttribute("aria-hidden", "true");
+
   setTimeout(() => {
     modal.style.display = "none";
   }, 420);
@@ -224,7 +226,10 @@ function launchSparkles(originX, originY, amount = 70) {
       particle.life -= 1;
       particle.twinkle += .18;
 
-      context.globalAlpha = Math.max(0, particle.life / 90) * (.65 + Math.sin(particle.twinkle) * .35);
+      context.globalAlpha =
+        Math.max(0, particle.life / 90) *
+        (.65 + Math.sin(particle.twinkle) * .35);
+
       context.fillStyle = "#ffffff";
       context.shadowBlur = 14;
       context.shadowColor = "#ffffff";

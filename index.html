@@ -4,10 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Uma XV</title>
-<!-- Actualización: I Love It - Icona Pop, inicio 00:15 -->
+<!-- Versión tipográfica neón + bola completa + explosión desde la esfera -->
 <meta name="theme-color" content="#030303">
 <link rel="preconnect" href="https://www.youtube.com">
 <link rel="preconnect" href="https://i.ytimg.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   --silver:#f7f7f7;
@@ -115,9 +118,9 @@ body::before{
   content:"";
   position:absolute;inset:-4%;
   background:
-    linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.48)),
-    url("assets/disco-ball-realistic.png") center 24% / cover no-repeat;
-  filter:saturate(.72) contrast(1.08);
+    radial-gradient(circle at 50% 24%,rgba(255,255,255,.18),transparent 28%),
+    radial-gradient(circle at 50% 35%,rgba(255,255,255,.06),transparent 48%),
+    linear-gradient(180deg,#020202,#080808);
   animation:heroBreath 8s ease-in-out infinite alternate;
 }
 .welcome::after{
@@ -142,17 +145,76 @@ body::before{
   100%{transform:scale(1.16);filter:saturate(.72) contrast(1.1) brightness(.88)}
 }
 
+
+.hero-ball-wrap{
+  position:relative;
+  width:min(76vw,390px);
+  margin:0 auto -8px;
+  aspect-ratio:1/1;
+  display:grid;
+  place-items:center;
+  filter:drop-shadow(0 0 34px rgba(255,255,255,.32));
+}
+.hero-ball-image{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  mix-blend-mode:screen;
+  user-select:none;
+  pointer-events:none;
+  animation:ballHover 5.8s ease-in-out infinite alternate;
+  transform-origin:50% 42%;
+}
+.hero-ball-wrap::after{
+  content:"";
+  position:absolute;
+  left:12%;right:12%;bottom:3%;
+  height:17%;
+  border-radius:50%;
+  background:radial-gradient(ellipse,rgba(255,255,255,.26),transparent 68%);
+  filter:blur(9px);
+}
+@keyframes ballHover{
+  from{transform:translateY(0) scale(1)}
+  to{transform:translateY(-8px) scale(1.018)}
+}
+.welcome.is-blasting .hero-ball-image{
+  animation:ballExplosion 1.25s cubic-bezier(.16,.84,.31,1) forwards;
+}
+@keyframes ballExplosion{
+  0%{transform:scale(1);filter:brightness(1)}
+  15%{transform:scale(1.045);filter:brightness(2.8) contrast(1.12)}
+  43%{transform:scale(1.18);filter:brightness(1.65) blur(.5px)}
+  100%{transform:scale(1.75);filter:brightness(2) blur(13px);opacity:0}
+}
+.invite-script{
+  margin:8px auto 24px;
+  font-size:clamp(2.25rem,8vw,4.2rem);
+  line-height:.96;
+}
+
 .welcome-inner{
   position:relative;z-index:3;
   width:min(100%,620px);
-  margin-top:34vh;
+  margin-top:0;
 }
 .eyebrow{
   margin:0 0 12px;color:var(--soft);
   font-size:.69rem;letter-spacing:.34em;text-transform:uppercase;
 }
 h1,h2,h3,.footer-name{
-  font-family:Georgia,"Times New Roman",serif;font-weight:400;
+  font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  font-weight:500;
+}
+body,.eyebrow,.button,.count-card span,.gift-card small{
+  font-family:"Montserrat",Arial,Helvetica,sans-serif;
+}
+.neon-script{
+  font-family:"Allura","Brush Script MT",cursive;
+  color:#ff9dcc;
+  text-shadow:
+    0 0 7px rgba(255,157,204,.75),
+    0 0 20px rgba(255,78,167,.38);
 }
 h1{
   margin:0 0 9px;
@@ -162,9 +224,17 @@ h1{
     0 0 15px rgba(255,255,255,.32),
     0 0 45px rgba(255,255,255,.16);
 }
-h1 span{
-  display:block;margin:31px 0 0 .45em;
-  font-size:.24em;letter-spacing:.45em;
+h1 .roman{
+  display:block;
+  margin:8px 0 0;
+  font-family:"Allura","Brush Script MT",cursive;
+  font-size:.52em;
+  letter-spacing:.02em;
+  color:#ff9dcc;
+  text-shadow:
+    0 0 8px rgba(255,157,204,.9),
+    0 0 28px rgba(255,69,164,.5);
+  transform:rotate(-5deg);
 }
 .welcome-date{
   margin:22px 0 25px;
@@ -281,10 +351,14 @@ footer{
   padding:96px 24px;text-align:center;
   background:#020202;border-top:1px solid rgba(255,255,255,.07);
 }
-.footer-ball{
-  width:92px;height:92px;margin:auto;border-radius:50%;
-  background:url("assets/disco-ball-realistic.png") center 31% / 340% auto no-repeat;
-  box-shadow:0 0 30px rgba(255,255,255,.35);
+.footer-ball-image{
+  display:block;
+  width:min(46vw,190px);
+  height:auto;
+  margin:0 auto -2px;
+  object-fit:contain;
+  mix-blend-mode:screen;
+  filter:drop-shadow(0 0 24px rgba(255,255,255,.30));
 }
 .footer-name{margin:18px 0 12px;font-size:4rem}
 
@@ -326,7 +400,7 @@ footer{
 }
 @media(max-width:520px){
   .welcome::before{background-size:auto 78%;background-position:center 5%}
-  .welcome-inner{margin-top:37vh}
+  .welcome-inner{margin-top:0}
   .count-card strong{font-size:1.65rem}
   .count-card span{font-size:.46rem}
 }
@@ -341,8 +415,11 @@ footer{
 
 <section id="welcome" class="welcome" aria-label="Portada de la invitación">
   <div class="welcome-inner">
+    <div id="heroBall" class="hero-ball-wrap" aria-hidden="true">
+      <img class="hero-ball-image" src="assets/disco-ball-realistic.png" alt="">
+    </div>
     <p class="eyebrow">Mis quince años</p>
-    <h1>Uma <span>XV</span></h1>
+    <h1>Uma <span class="roman">XV</span></h1>
     <p class="welcome-date">24 · 10 · 2026</p>
     <button id="enterButton" class="button primary" disabled>
       <span id="enterLabel" class="loading">Cargando música</span>
@@ -355,7 +432,8 @@ footer{
 <main id="invitation" aria-hidden="true">
   <section class="section reveal">
     <p class="eyebrow">Una noche especial</p>
-    <h2>Te invito a celebrar conmigo</h2>
+    <h2>Una noche para recordar</h2>
+    <p class="neon-script invite-script">¿Venís a celebrarlo conmigo?</p>
     <p class="lead">Hay momentos que se sueñan toda la vida. Quiero compartir el mío con las personas que más quiero.</p>
   </section>
 
@@ -439,8 +517,8 @@ footer{
   </section>
 
   <footer>
-    <div class="footer-ball" aria-hidden="true"></div>
-    <p class="footer-name">Uma XV</p>
+    <img class="footer-ball-image" src="assets/disco-ball-realistic.png" alt="" aria-hidden="true">
+    <p class="footer-name">Uma <span class="neon-script">XV</span></p>
     <p>Los espero para compartir una noche inolvidable.</p>
     <p class="eyebrow">24 de octubre de 2026</p>
   </footer>
@@ -471,6 +549,7 @@ const toast=document.getElementById("toast");
 const wowFlash=document.getElementById("wowFlash");
 const lightRing=document.getElementById("lightRing");
 const beamBurst=document.getElementById("beamBurst");
+const heroBall=document.getElementById("heroBall");
 
 let player=null;
 let playerReady=false;
@@ -541,14 +620,25 @@ setTimeout(()=>{
 },7000);
 
 function triggerWow(){
+  const rect=heroBall.getBoundingClientRect();
+  const originX=rect.left+rect.width/2;
+  const originY=rect.top+rect.height*.42;
+
   [wowFlash,lightRing,beamBurst].forEach(el=>{
     el.classList.remove("active");
     void el.offsetWidth;
     el.classList.add("active");
   });
+
+  lightRing.style.left=originX+"px";
+  lightRing.style.top=originY+"px";
+  beamBurst.style.left=originX+"px";
+  beamBurst.style.top=originY+"px";
+
   welcome.classList.add("is-blasting");
-  launchSparkles(innerWidth/2,innerHeight*.38,420,true);
-  setTimeout(()=>launchSparkles(innerWidth/2,innerHeight*.38,220,false),280);
+  launchSparkles(originX,originY,620,true);
+  setTimeout(()=>launchSparkles(originX,originY,340,true),170);
+  setTimeout(()=>launchSparkles(originX,originY,220,false),390);
 }
 
 enterButton.addEventListener("click",()=>{

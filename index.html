@@ -9,24 +9,103 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://www.youtube.com">
-  <link rel="preconnect" href="https://i.ytimg.com">
-
   <link href="https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <canvas id="fxCanvas"></canvas>
-  <div id="flash"></div>
-  <div id="ring"></div>
-  <div id="beams"></div>
-  <div id="ytPlayer" aria-hidden="true"></div>
+  <div id="flash" class="flash"></div>
+  <div id="ring" class="ring"></div>
+  <div id="beams" class="beams"></div>
+  <div id="ytPlayer" class="yt-player" aria-hidden="true"></div>
 
-  <section id="welcome" class="welcome">
-    <div class="welcome-bg"></div>
+  <section id="welcome" class="welcome" aria-label="Portada de la invitación">
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
 
     <div class="welcome-content">
-      <div id="heroBall" class="hero-ball">
-        <img src="assets/disco-ball.png" alt="" aria-hidden="true">
+      <div id="heroBall" class="hero-ball" aria-hidden="true">
+        <div class="chain"></div>
+
+        <svg class="mirror-ball" viewBox="0 0 520 560">
+          <defs>
+            <radialGradient id="sphereShade" cx="34%" cy="27%" r="74%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="15%" stop-color="#eeeeee"/>
+              <stop offset="43%" stop-color="#a8a8a8"/>
+              <stop offset="70%" stop-color="#444444"/>
+              <stop offset="100%" stop-color="#090909"/>
+            </radialGradient>
+
+            <linearGradient id="tileShade" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="46%" stop-color="#bdbdbd"/>
+              <stop offset="100%" stop-color="#282828"/>
+            </linearGradient>
+
+            <linearGradient id="capShade" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="55%" stop-color="#777777"/>
+              <stop offset="100%" stop-color="#1b1b1b"/>
+            </linearGradient>
+
+            <pattern id="mirrorPattern" width="31" height="31" patternUnits="userSpaceOnUse">
+              <rect x="2" y="2" width="27" height="27" rx="1.5"
+                    fill="url(#tileShade)"
+                    stroke="#ffffff"
+                    stroke-opacity=".45"
+                    stroke-width="1"/>
+            </pattern>
+
+            <clipPath id="sphereClip">
+              <circle cx="260" cy="326" r="190"/>
+            </clipPath>
+
+            <filter id="ballGlow" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="16"/>
+            </filter>
+          </defs>
+
+          <line x1="260" y1="0" x2="260" y2="105"
+                stroke="#dcdcdc" stroke-width="5"/>
+
+          <rect x="223" y="87" width="74" height="54" rx="15"
+                fill="url(#capShade)"
+                stroke="#ffffff" stroke-opacity=".85" stroke-width="4"/>
+
+          <circle cx="260" cy="326" r="212"
+                  fill="#ffffff" opacity=".16" filter="url(#ballGlow)"/>
+
+          <circle cx="260" cy="326" r="190" fill="url(#sphereShade)"/>
+
+          <g clip-path="url(#sphereClip)">
+            <rect x="48" y="114" width="424" height="424"
+                  fill="url(#mirrorPattern)"
+                  transform="rotate(-4 260 326)"/>
+
+            <ellipse cx="194" cy="230" rx="112" ry="70"
+                     fill="#ffffff" opacity=".28"/>
+
+            <ellipse cx="350" cy="410" rx="132" ry="98"
+                     fill="#000000" opacity=".26"/>
+
+            <path d="M72 310 Q260 205 448 310"
+                  fill="none" stroke="#ffffff" stroke-opacity=".22" stroke-width="9"/>
+
+            <path d="M88 398 Q260 296 432 398"
+                  fill="none" stroke="#000000" stroke-opacity=".20" stroke-width="12"/>
+          </g>
+
+          <circle cx="260" cy="326" r="190"
+                  fill="none" stroke="#ffffff" stroke-opacity=".48" stroke-width="4"/>
+
+          <circle cx="183" cy="217" r="21" fill="#ffffff" opacity=".92"/>
+          <circle cx="350" cy="276" r="11" fill="#ffffff" opacity=".70"/>
+          <circle cx="142" cy="372" r="8" fill="#ffffff" opacity=".56"/>
+        </svg>
+
+        <div class="ball-rays"></div>
       </div>
 
       <p class="eyebrow">Mis quince años</p>
@@ -39,13 +118,15 @@
       <p class="hero-question">¿Venís a celebrarlo conmigo?</p>
       <p class="hero-date">24 · 10 · 2026</p>
 
-      <button id="enterButton" class="main-button" disabled>
-        <span id="enterLabel">Cargando música…</span>
+      <button id="enterButton" class="enter-button" type="button">
+        <span id="enterLabel">Entrar</span>
       </button>
     </div>
   </section>
 
-  <button id="musicToggle" class="music-toggle" aria-label="Pausar o reproducir música">❚❚</button>
+  <button id="musicToggle" class="music-toggle" type="button" aria-label="Pausar o reproducir música">
+    ❚❚
+  </button>
 
   <main id="invitation" aria-hidden="true">
     <section class="section reveal">
@@ -76,10 +157,12 @@
           <p class="eyebrow">Cuándo</p>
           <h3>Sábado 24 de octubre</h3>
           <p>21:00 a 05:00 hs</p>
+
           <a class="pill-button sparkle-target"
              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Uma%20XV&dates=20261025T000000Z%2F20261025T080000Z&details=Fiesta%20de%2015%20de%20Uma&location=Stihmpra%2C%20Neuqu%C3%A9n"
-             target="_blank" rel="noopener noreferrer">
-             Agendar fecha
+             target="_blank"
+             rel="noopener noreferrer">
+            Agendar fecha
           </a>
         </article>
 
@@ -87,10 +170,12 @@
           <p class="eyebrow">Dónde</p>
           <h3>Stihmpra</h3>
           <p>Neuquén</p>
+
           <a class="pill-button sparkle-target"
              href="https://www.google.com/maps/place/Stihmpra/@-38.9565964,-67.9270484,285m/data=!3m1!1e3!4m6!3m5!1s0x960a3ac097acdc07:0x99a7cc87a7b4589a!8m2!3d-38.9562458!4d-67.9275894!16s%2Fg%2F11cspqgqd1?entry=ttu"
-             target="_blank" rel="noopener noreferrer">
-             Cómo llegar
+             target="_blank"
+             rel="noopener noreferrer">
+            Cómo llegar
           </a>
         </article>
       </div>
@@ -112,19 +197,19 @@
       </p>
 
       <div class="gift-grid">
-        <button class="glass-card gift-card sparkle-target" data-gift="transferencia">
+        <button class="glass-card gift-card sparkle-target" type="button" data-gift="transferencia">
           <span class="gift-icon">💳</span>
           <strong>Transferencia</strong>
           <small>Ver y copiar alias</small>
         </button>
 
-        <button class="glass-card gift-card sparkle-target" data-gift="sobre">
+        <button class="glass-card gift-card sparkle-target" type="button" data-gift="sobre">
           <span class="gift-icon">✉️</span>
           <strong>Sobre</strong>
           <small>Información para la fiesta</small>
         </button>
 
-        <button class="glass-card gift-card sparkle-target" data-gift="regalo">
+        <button class="glass-card gift-card sparkle-target" type="button" data-gift="regalo">
           <span class="gift-icon">🎁</span>
           <strong>Regalo tradicional</strong>
           <small>Cualquier detalle será bienvenido</small>
@@ -139,13 +224,53 @@
 
       <a class="pill-button confirm-button sparkle-target"
          href="https://wa.me/5492995530444?text=Hola%20Uma%20%F0%9F%98%8A%20Confirmo%20mi%20asistencia%20a%20tus%20XV.%20%C2%A1Nos%20vemos%20el%2024%20de%20octubre!"
-         target="_blank" rel="noopener noreferrer">
-         Confirmar asistencia
+         target="_blank"
+         rel="noopener noreferrer">
+        Confirmar asistencia
       </a>
     </section>
 
     <footer>
-      <img src="assets/disco-ball.png" class="footer-ball" alt="" aria-hidden="true">
+      <div class="footer-ball" aria-hidden="true">
+        <svg viewBox="0 0 520 560">
+          <defs>
+            <radialGradient id="footerSphere" cx="34%" cy="27%" r="74%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="16%" stop-color="#ededed"/>
+              <stop offset="44%" stop-color="#a7a7a7"/>
+              <stop offset="73%" stop-color="#3f3f3f"/>
+              <stop offset="100%" stop-color="#090909"/>
+            </radialGradient>
+
+            <pattern id="footerTiles" width="31" height="31" patternUnits="userSpaceOnUse">
+              <rect x="2" y="2" width="27" height="27" rx="1.5"
+                    fill="url(#footerSphere)"
+                    stroke="#ffffff"
+                    stroke-opacity=".42"
+                    stroke-width="1"/>
+            </pattern>
+
+            <clipPath id="footerClip">
+              <circle cx="260" cy="326" r="190"/>
+            </clipPath>
+          </defs>
+
+          <line x1="260" y1="0" x2="260" y2="105"
+                stroke="#dcdcdc" stroke-width="5"/>
+
+          <circle cx="260" cy="326" r="190" fill="url(#footerSphere)"/>
+
+          <g clip-path="url(#footerClip)">
+            <rect x="48" y="114" width="424" height="424"
+                  fill="url(#footerTiles)"
+                  transform="rotate(-4 260 326)"/>
+          </g>
+
+          <circle cx="260" cy="326" r="190"
+                  fill="none" stroke="#ffffff" stroke-opacity=".5" stroke-width="4"/>
+        </svg>
+      </div>
+
       <p class="footer-title">Uma <span>XV</span></p>
       <p>Los espero para compartir una noche inolvidable.</p>
       <p class="eyebrow">24 de octubre de 2026</p>
@@ -153,8 +278,8 @@
   </main>
 
   <div id="giftModal" class="modal" aria-hidden="true">
-    <div class="modal-card">
-      <button id="closeModal" class="close-button" aria-label="Cerrar">×</button>
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <button id="closeModal" class="close-button" type="button" aria-label="Cerrar">×</button>
       <div id="modalContent"></div>
     </div>
   </div>

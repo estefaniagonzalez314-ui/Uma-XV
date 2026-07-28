@@ -7,7 +7,6 @@ const html = document.documentElement;
 const welcome = document.getElementById("welcome");
 const invitation = document.getElementById("invitation");
 const enterButton = document.getElementById("enterButton");
-const enterLabel = document.getElementById("enterLabel");
 const heroBall = document.getElementById("heroBall");
 const musicToggle = document.getElementById("musicToggle");
 const modal = document.getElementById("giftModal");
@@ -42,13 +41,17 @@ function updateCountdown() {
 setInterval(updateCountdown, 1000);
 updateCountdown();
 
-const observer = new IntersectionObserver(entries => {
+const revealObserver = new IntersectionObserver(entries => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) entry.target.classList.add("visible");
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+    }
   });
 }, { threshold: 0.12 });
 
-document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+document.querySelectorAll(".reveal").forEach(el => {
+  revealObserver.observe(el);
+});
 
 window.onYouTubeIframeAPIReady = function () {
   player = new YT.Player("ytPlayer", {
@@ -69,59 +72,46 @@ window.onYouTubeIframeAPIReady = function () {
           videoId: VIDEO_ID,
           startSeconds: MUSIC_START_SECONDS
         });
-
-        enterButton.disabled = false;
-        enterLabel.textContent = "Entrar";
       },
       onError() {
-        enterButton.disabled = false;
-        enterLabel.textContent = "Entrar";
+        playerReady = false;
       }
     }
   });
 };
 
-const ytScript = document.createElement("script");
-ytScript.src = "https://www.youtube.com/iframe_api";
-document.head.appendChild(ytScript);
+const youtubeScript = document.createElement("script");
+youtubeScript.src = "https://www.youtube.com/iframe_api";
+document.head.appendChild(youtubeScript);
 
-setTimeout(() => {
-  if (enterButton.disabled) {
-    enterButton.disabled = false;
-    enterLabel.textContent = "Entrar";
-  }
-}, 7000);
-
-function playAnimation(el) {
-  el.classList.remove("active");
-  void el.offsetWidth;
-  el.classList.add("active");
+function restartAnimation(element) {
+  element.classList.remove("active");
+  void element.offsetWidth;
+  element.classList.add("active");
 }
 
 function triggerWow() {
   const rect = heroBall.getBoundingClientRect();
-  const x = rect.left + rect.width / 2;
-  const y = rect.top + rect.height * 0.42;
+  const originX = rect.left + rect.width / 2;
+  const originY = rect.top + rect.height * 0.48;
 
-  ring.style.left = `${x}px`;
-  ring.style.top = `${y}px`;
-  beams.style.left = `${x}px`;
-  beams.style.top = `${y}px`;
+  ring.style.left = `${originX}px`;
+  ring.style.top = `${originY}px`;
+  beams.style.left = `${originX}px`;
+  beams.style.top = `${originY}px`;
 
-  playAnimation(flash);
-  playAnimation(ring);
-  playAnimation(beams);
+  restartAnimation(flash);
+  restartAnimation(ring);
+  restartAnimation(beams);
 
   welcome.classList.add("blasting");
 
-  launchParticles(x, y, 650, true);
-  setTimeout(() => launchParticles(x, y, 320, true), 170);
-  setTimeout(() => launchParticles(x, y, 180, false), 390);
+  launchParticles(originX, originY, 700, true);
+  setTimeout(() => launchParticles(originX, originY, 350, true), 170);
+  setTimeout(() => launchParticles(originX, originY, 220, false), 390);
 }
 
 enterButton.addEventListener("click", () => {
-  if (enterButton.disabled) return;
-
   triggerWow();
 
   if (playerReady && player) {
@@ -163,14 +153,16 @@ musicToggle.addEventListener("click", event => {
   musicPlaying = !musicPlaying;
 });
 
-document.querySelectorAll(".sparkle-target").forEach(el => {
-  el.addEventListener("pointerdown", event => {
+document.querySelectorAll(".sparkle-target").forEach(element => {
+  element.addEventListener("pointerdown", event => {
     launchParticles(event.clientX, event.clientY, 55, false);
   });
 });
 
 document.querySelectorAll("[data-gift]").forEach(button => {
-  button.addEventListener("click", () => openGift(button.dataset.gift));
+  button.addEventListener("click", () => {
+    openGift(button.dataset.gift);
+  });
 });
 
 function openGift(type) {
@@ -179,7 +171,7 @@ function openGift(type) {
       <p class="eyebrow">Transferencia</p>
       <h2 style="font-size:2.4rem">Mi alias</h2>
       <div class="alias">umasilva.mp</div>
-      <button id="copyAlias" class="pill-button">Copiar alias</button>
+      <button id="copyAlias" class="pill-button" type="button">Copiar alias</button>
     `;
   }
 
@@ -243,7 +235,10 @@ async function copyAlias() {
 function showToast(message) {
   toast.textContent = message;
   toast.classList.add("visible");
-  setTimeout(() => toast.classList.remove("visible"), 1800);
+
+  setTimeout(() => {
+    toast.classList.remove("visible");
+  }, 1800);
 }
 
 function launchParticles(originX, originY, amount = 80, wow = false) {
@@ -270,40 +265,46 @@ function launchParticles(originX, originY, amount = 80, wow = false) {
   function draw() {
     context.clearRect(0, 0, innerWidth, innerHeight);
 
-    particles.forEach(p => {
-      const oldX = p.x;
-      const oldY = p.y;
+    particles.forEach(particle => {
+      const previousX = particle.x;
+      const previousY = particle.y;
 
-      p.x += Math.cos(p.angle) * p.speed;
-      p.y += Math.sin(p.angle) * p.speed + p.gravity;
-      p.speed *= wow ? .987 : .982;
-      p.life -= 1;
-      p.twinkle += .22;
+      particle.x += Math.cos(particle.angle) * particle.speed;
+      particle.y += Math.sin(particle.angle) * particle.speed + particle.gravity;
+      particle.speed *= wow ? .987 : .982;
+      particle.life -= 1;
+      particle.twinkle += .22;
 
       const alpha =
-        Math.max(0, p.life / (wow ? 135 : 90)) *
-        (.62 + Math.sin(p.twinkle) * .38);
+        Math.max(0, particle.life / (wow ? 135 : 90)) *
+        (.62 + Math.sin(particle.twinkle) * .38);
 
       context.globalAlpha = alpha;
-      context.fillStyle = "#fff";
-      context.strokeStyle = "#fff";
+      context.fillStyle = "#ffffff";
+      context.strokeStyle = "#ffffff";
       context.shadowBlur = wow ? 22 : 14;
-      context.shadowColor = "#fff";
+      context.shadowColor = "#ffffff";
 
-      if (p.streak) {
-        context.lineWidth = Math.max(1, p.radius * .55);
+      if (particle.streak) {
+        context.lineWidth = Math.max(1, particle.radius * .55);
         context.beginPath();
-        context.moveTo(oldX, oldY);
-        context.lineTo(p.x, p.y);
+        context.moveTo(previousX, previousY);
+        context.lineTo(particle.x, particle.y);
         context.stroke();
       } else {
         context.beginPath();
-        context.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        context.arc(
+          particle.x,
+          particle.y,
+          particle.radius,
+          0,
+          Math.PI * 2
+        );
         context.fill();
       }
     });
 
-    if (particles.some(p => p.life > 0)) {
+    if (particles.some(particle => particle.life > 0)) {
       requestAnimationFrame(draw);
     } else {
       context.clearRect(0, 0, innerWidth, innerHeight);
